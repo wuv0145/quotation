@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>歪點子創意設計 - 案件報價小工具</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        warm: {
+                            bg: '#FDFBF7',      // 暖米白背景
+                            primary: '#C47250', // 焦糖橘主色
+                            primaryHover: '#A85E3E',
+                            border: '#EADBC8',  // 奶茶色邊框
+                            text: '#4A3B32',    // 深可可色文字
+                            light: '#F8F1EB',   // 輔助底色
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Noto Serif TC"', 'serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px rgba(74, 59, 50, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #e5e5e5; /* 桌面預覽時的外圍背景 */
+            font-family: 'Noto Serif TC', serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* 隱藏捲軸但保留滾動功能 (針對手機版美觀) */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* 模擬手繪底線 */
+        .hand-drawn-underline {
+            position: relative;
+            display: inline-block;
+        }
+        .hand-drawn-underline::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 6px;
+            bottom: 0px;
+            left: 0;
+            background-color: rgba(196, 114, 80, 0.2);
+            border-radius: 10px;
+            z-index: -1;
+            transform: rotate(-1deg);
+        }
+    </style>
+</head>
+<body class="flex justify-center items-center min-h-screen">
+
+    <main class="w-full max-w-[400px] h-[100dvh] bg-warm-bg text-warm-text relative shadow-2xl overflow-hidden sm:rounded-[2.5rem] sm:h-[850px] sm:border-8 sm:border-gray-800 flex flex-col">
+        
+        <header class="flex justify-between items-center px-6 py-4 bg-warm-bg/90 backdrop-blur-md z-10 border-b border-warm-border">
+            <button class="text-warm-text/0 text-2xl p-1 pointer-events-none">
+                <!-- 佔位符以保持標題置中 -->
+                <i class="ph ph-list"></i> 
+            </button>
+            <h1 class="text-lg font-bold tracking-wider text-warm-text">歪點子創意設計</h1>
+            <button class="text-warm-text text-2xl p-1 active:scale-95 transition-transform">
+                <i class="ph ph-user-circle"></i>
+            </button>
+        </header>
+
+        <!-- 移除了原本的 pb-28，改為 pb-10 因為沒有底部導覽列了 -->
+        <div class="flex-1 overflow-y-auto px-6 pb-10 pt-6">
+            
+            <!-- 標題 -->
+            <div class="text-center mb-8">
+                <h2 class="text-xl font-bold flex items-center justify-center gap-2">
+                    <i class="ph ph-plant text-warm-primary text-2xl"></i>
+                    設計案件預算小幫手
+                    <i class="ph ph-coffee text-warm-primary text-2xl"></i>
+                </h2>
+                <p class="text-xs text-warm-text/60 mt-2">勾選您的需求，立即為您試算初步報價</p>
+            </div>
+
+            <div class="space-y-6 mb-8">
+                <!-- 1. 專案類別 -->
+                <div>
+                    <label class="block text-sm font-bold mb-2">1. 專案主類別</label>
+                    <div class="relative">
+                        <select class="w-full appearance-none bg-white border-2 border-warm-border rounded-xl px-4 py-3 text-warm-text focus:outline-none focus:border-warm-primary transition-colors shadow-soft">
+                            <option>品牌視覺設計</option>
+                            <option>網站建置與設計</option>
+                            <option>實體印刷品設計</option>
+                            <option>商業插畫專案</option>
+                        </select>
+                        <i class="ph ph-caret-down absolute right-4 top-1/2 -translate-y-1/2 text-warm-text pointer-events-none"></i>
+                    </div>
+                </div>
+
+                <!-- 2. 專案細節 -->
+                <div>
+                    <label class="block text-sm font-bold mb-2 flex justify-between items-end">
+                        <span>2. 專案基本資訊</span>
+                        <i class="ph ph-pencil-simple-line text-warm-text/50"></i>
+                    </label>
+                    <div class="space-y-3">
+                        <input type="text" placeholder="您的品牌或專案名稱" class="w-full bg-white border-2 border-warm-border rounded-xl px-4 py-3 text-warm-text focus:outline-none focus:border-warm-primary transition-colors shadow-soft placeholder-warm-text/40">
+                        <textarea rows="3" placeholder="簡單描述一下您的專案目標..." class="w-full bg-white border-2 border-warm-border rounded-xl px-4 py-3 text-warm-text focus:outline-none focus:border-warm-primary transition-colors shadow-soft placeholder-warm-text/40 resize-none"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <label class="block text-sm font-bold mb-3 flex items-center gap-2">
+                    3. 附加需求選擇 <span class="text-xs font-normal text-warm-primary">(可複選)</span>
+                </label>
+                <div class="grid grid-cols-2 gap-3" id="checkbox-group">
+                    
+                    <!-- 卡片 1 -->
+                    <label class="block cursor-pointer group">
+                        <input type="checkbox" class="peer hidden service-checkbox" data-name="Logo設計" data-price="5000">
+                        <div class="border-2 border-warm-border rounded-2xl p-4 bg-white shadow-soft transition-all duration-300 peer-checked:border-warm-primary peer-checked:bg-warm-primary/5 flex flex-col items-center text-center h-full gap-2">
+                            <div class="w-10 h-10 rounded-full bg-warm-light flex items-center justify-center text-warm-primary text-xl mb-1 group-hover:scale-110 transition-transform">
+                                <i class="ph ph-bezier-curve"></i>
+                            </div>
+                            <span class="text-sm font-bold peer-checked:text-warm-primary">Logo設計</span>
+                        </div>
+                    </label>
+
+                    <!-- 卡片 2 -->
+                    <label class="block cursor-pointer group">
+                        <input type="checkbox" class="peer hidden service-checkbox" data-name="響應式網站" data-price="35000">
+                        <div class="border-2 border-warm-border rounded-2xl p-4 bg-white shadow-soft transition-all duration-300 peer-checked:border-warm-primary peer-checked:bg-warm-primary/5 flex flex-col items-center text-center h-full gap-2">
+                            <div class="w-10 h-10 rounded-full bg-warm-light flex items-center justify-center text-warm-primary text-xl mb-1 group-hover:scale-110 transition-transform">
+                                <i class="ph ph-laptop"></i>
+                            </div>
+                            <span class="text-sm font-bold peer-checked:text-warm-primary">響應式網站</span>
+                        </div>
+                    </label>
+
+                    <!-- 卡片 3 -->
+                    <label class="block cursor-pointer group">
+                        <input type="checkbox" class="peer hidden service-checkbox" data-name="企業識別" data-price="3000">
+                        <div class="border-2 border-warm-border rounded-2xl p-4 bg-white shadow-soft transition-all duration-300 peer-checked:border-warm-primary peer-checked:bg-warm-primary/5 flex flex-col items-center text-center h-full gap-2">
+                            <div class="w-10 h-10 rounded-full bg-warm-light flex items-center justify-center text-warm-primary text-xl mb-1 group-hover:scale-110 transition-transform">
+                                <i class="ph ph-swatches"></i>
+                            </div>
+                            <span class="text-sm font-bold peer-checked:text-warm-primary">企業識別</span>
+                        </div>
+                    </label>
+
+                    <!-- 卡片 4 -->
+                    <label class="block cursor-pointer group">
+                        <input type="checkbox" class="peer hidden service-checkbox" data-name="名片設計" data-price="4000">
+                        <div class="border-2 border-warm-border rounded-2xl p-4 bg-white shadow-soft transition-all duration-300 peer-checked:border-warm-primary peer-checked:bg-warm-primary/5 flex flex-col items-center text-center h-full gap-2">
+                            <div class="w-10 h-10 rounded-full bg-warm-light flex items-center justify-center text-warm-primary text-xl mb-1 group-hover:scale-110 transition-transform">
+                                <i class="ph ph-identification-card"></i>
+                            </div>
+                            <span class="text-sm font-bold peer-checked:text-warm-primary">名片設計</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="bg-[#F6EFE8] rounded-2xl p-5 border border-warm-border shadow-inner relative">
+                <i class="ph ph-push-pin text-warm-primary text-2xl absolute -top-3 left-1/2 -translate-x-1/2 rotate-12"></i>
+                
+                <div class="flex justify-between items-center mb-4 border-b border-warm-text/10 pb-3 pt-2">
+                    <h3 class="font-bold text-lg">預估報價單</h3>
+                    <i class="ph ph-receipt text-warm-text"></i>
+                </div>
+
+                <!-- 動態明細列表 -->
+                <ul id="quote-list" class="space-y-3 mb-6 text-sm text-warm-text/90 min-h-[40px]">
+                    <!-- 預設提示文字 -->
+                    <li class="text-center text-warm-text/50 py-2 italic" id="empty-state">請在上方勾選需求項目</li>
+                </ul>
+
+                <!-- 總金額 -->
+                <div class="text-center mt-6 pt-4 border-t border-warm-text/10">
+                    <p class="text-sm font-bold mb-1">預估總金額：</p>
+                    <p class="text-3xl font-bold text-warm-primary hand-drawn-underline mb-6 transition-transform duration-200" id="total-price">$0 TWD</p>
+                    
+                    <button onclick="submitQuote()" class="w-full bg-warm-primary hover:bg-warm-primaryHover text-white font-bold py-3.5 px-6 rounded-xl shadow-[0_4px_0_#A85E3E] active:shadow-[0_0px_0_#A85E3E] active:translate-y-[4px] transition-all flex justify-center items-center gap-2">
+                        <span>送出詢價單</span>
+                        <i class="ph ph-paper-plane-tilt text-lg"></i>
+                    </button>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkboxes = document.querySelectorAll('.service-checkbox');
+            const quoteList = document.getElementById('quote-list');
+            const emptyState = document.getElementById('empty-state');
+            const totalPriceEl = document.getElementById('total-price');
+
+            // 格式化金錢數字 (加上逗號)
+            const formatCurrency = (num) => {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            };
+
+            // 更新報價單明細與總和
+            const updateQuotation = () => {
+                let total = 0;
+                let hasItems = false;
+                
+                // 清空目前的列表 (除了 empty-state 外)
+                quoteList.innerHTML = '';
+
+                checkboxes.forEach(cb => {
+                    if (cb.checked) {
+                        hasItems = true;
+                        const name = cb.getAttribute('data-name');
+                        const price = parseInt(cb.getAttribute('data-price'));
+                        total += price;
+
+                        // 建立列表項目
+                        const li = document.createElement('li');
+                        li.className = 'flex justify-between items-center animate-[fadeIn_0.3s_ease-in-out]';
+                        li.innerHTML = `
+                            <span class="flex items-center gap-2">
+                                <i class="ph ph-check text-warm-primary font-bold"></i> ${name}
+                            </span>
+                            <span class="font-bold tracking-wide">$${formatCurrency(price)}</span>
+                        `;
+                        quoteList.appendChild(li);
+                    }
+                });
+
+                // 處理空狀態與總計
+                if (!hasItems) {
+                    quoteList.appendChild(emptyState);
+                    emptyState.style.display = 'block';
+                } else {
+                    emptyState.style.display = 'none';
+                }
+
+                // 動態更新數字動畫效果
+                totalPriceEl.style.transform = 'scale(1.08)';
+                setTimeout(() => {
+                    totalPriceEl.style.transform = 'scale(1)';
+                }, 150);
+                
+                totalPriceEl.textContent = `$${formatCurrency(total)} TWD`;
+            };
+
+            // 為每個 checkbox 綁定事件
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', updateQuotation);
+            });
+            
+            // 補上簡單的 fadeIn 動畫定義
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(-5px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+
+        // 送出按鈕互動
+        function submitQuote() {
+            const totalPriceText = document.getElementById('total-price').textContent;
+            if(totalPriceText === '$0 TWD') {
+                alert('請至少勾選一項附加需求來試算初步報價喔！');
+                return;
+            }
+            
+            // 模擬按鈕點擊後的回饋
+            const btn = document.querySelector('button[onclick="submitQuote()"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<i class="ph ph-spinner animate-spin text-lg"></i> <span>處理中...</span>`;
+            btn.classList.add('pointer-events-none');
+            
+            setTimeout(() => {
+                btn.innerHTML = `<i class="ph ph-check-circle text-lg"></i> <span>已送出詢價</span>`;
+                btn.classList.replace('bg-warm-primary', 'bg-[#8A9A5B]'); // 抹茶綠
+                btn.classList.replace('hover:bg-warm-primaryHover', 'hover:bg-[#73824A]');
+                btn.classList.replace('shadow-[0_4px_0_#A85E3E]', 'shadow-[0_4px_0_#5B6B38]');
+                
+                setTimeout(() => {
+                    // 恢復按鈕原狀
+                    btn.innerHTML = originalText;
+                    btn.classList.replace('bg-[#8A9A5B]', 'bg-warm-primary');
+                    btn.classList.replace('hover:bg-[#73824A]', 'hover:bg-warm-primaryHover');
+                    btn.classList.replace('shadow-[0_4px_0_#5B6B38]', 'shadow-[0_4px_0_#A85E3E]');
+                    btn.classList.remove('pointer-events-none');
+                    alert('詢價單已成功送出！歪點子創意設計會盡快與您聯繫 ☕');
+                }, 2500);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
